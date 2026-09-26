@@ -5,3 +5,4 @@
 - [x] Render cited results, sources, terms, and coverage comparisons.
 - [x] Verify the app in the browser and review diagnostics.
 - [x] Add a persistent dark mode switch and verify both themes.
+- [x] Refine the scale and redesign Pulse with the chosen paper-and-rust editorial direction.
