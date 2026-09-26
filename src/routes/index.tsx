@@ -169,8 +169,8 @@ function Pulse() {
   const compact = phase !== "home";
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="relative z-10 mx-auto flex h-20 max-w-7xl items-center justify-between border-b border-border px-6 md:px-10">
-        <Button variant="ghost" onClick={goHome} className="h-auto p-0 font-serif text-[31px] font-semibold leading-none hover:bg-transparent hover:text-primary" aria-label="Pulse home">pulse<span className="text-primary">.</span></Button>
+      <header className="relative z-10 mx-auto flex h-16 max-w-7xl items-center justify-between border-b border-border px-6 md:px-10">
+        <Button variant="ghost" onClick={goHome} className="h-auto p-0 font-serif text-[18px] font-normal leading-none hover:bg-transparent hover:text-primary" aria-label="Pulse home">pulse<span className="text-primary">.</span></Button>
         <div className="flex items-center gap-3 sm:gap-5">
           {ready && apiUrl && <span className="hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:flex"><span className="h-1.5 w-1.5 rounded-full bg-primary" /> Connected</span>}
           <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"} title={darkMode ? "Switch to light mode" : "Switch to dark mode"} className="text-muted-foreground hover:text-foreground">{darkMode ? <Sun className="!size-[19px]" strokeWidth={1.6} /> : <Moon className="!size-[19px]" strokeWidth={1.6} />}</Button>
@@ -198,40 +198,42 @@ function Pulse() {
       ) : null}
 
       <main>
-        {phase === "home" && <div className="arrive mx-auto flex min-h-[calc(100vh-145px)] max-w-5xl flex-col justify-center px-6 pb-20 pt-14 md:px-10 md:pb-28">
-          <div className="mb-8 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-primary"><span className="h-px w-7 bg-primary" /> A clearer view of the news</div>
-          <h1 className="max-w-[850px] font-serif text-[clamp(3.8rem,8vw,7.6rem)] font-normal leading-[0.95]">Know the story.<br /><em className="font-normal text-primary">See the whole picture.</em></h1>
-          <p className="mt-7 max-w-lg text-[15px] leading-7 text-muted-foreground md:text-base">Research what matters, with the sources and perspectives right beside the summary.</p>
-          <form onSubmit={(event) => { event.preventDefault(); void research(query); }} className="mt-12 flex w-full max-w-[790px] items-center border-b-2 border-foreground pb-3 transition-colors focus-within:border-primary md:mt-16 md:pb-4">
-            <Search className="mr-4 size-5 shrink-0 text-muted-foreground md:size-6" strokeWidth={1.5} />
-            <input ref={searchRef} aria-label="What would you like to understand?" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="What would you like to understand?" className="min-w-0 flex-1 bg-transparent font-serif text-xl outline-none placeholder:text-muted-foreground/70 sm:text-2xl md:text-3xl" />
-            <Button type="submit" size="icon" aria-label="Research topic" title="Research topic" className="ml-3 size-10 shrink-0 rounded-full shadow-none md:size-11"><ArrowRight className="!size-5" /></Button>
-          </form>
-          <div className="mt-5 max-w-[790px]">
+        {phase === "home" && <div className="arrive mx-auto flex min-h-[calc(100vh-121px)] max-w-5xl flex-col justify-center px-5 pb-16 pt-12 md:px-10 md:pb-20">
+          <div className="mx-auto w-full max-w-[690px] text-center">
+            <p className="mb-5 text-[11px] font-medium uppercase text-primary">News, in perspective</p>
+            <h1 className="font-serif text-[42px] font-normal leading-[1.18] sm:text-[52px] md:text-[60px]">Pulse<span className="text-primary">.</span></h1>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-muted-foreground">Research the story. Read beyond the headline.</p>
+            <form onSubmit={(event) => { event.preventDefault(); void research(query); }} className="mt-10 flex w-full items-center rounded-md border border-input bg-card px-3 py-2 transition-colors focus-within:border-primary sm:px-4 sm:py-2.5">
+              <Search className="mr-3 size-4 shrink-0 text-muted-foreground sm:size-5" strokeWidth={1.6} />
+              <input ref={searchRef} aria-label="What would you like to understand?" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search a topic or story…" className="min-w-0 flex-1 bg-transparent py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground sm:text-base" />
+              <Button type="submit" size="icon" aria-label="Research topic" title="Research topic" className="ml-2 size-9 shrink-0 rounded-sm shadow-none"><ArrowRight className="!size-4" /></Button>
+            </form>
+          </div>
+          <div className="mx-auto mt-4 w-full max-w-[690px]">
             <Button variant="ghost" onClick={() => setAdvancedOpen(!advancedOpen)} aria-expanded={advancedOpen} className="h-8 -ml-3 gap-2 px-3 text-xs font-normal text-muted-foreground hover:text-foreground">Research options <ChevronDown className={`!size-3.5 transition-transform ${advancedOpen ? "rotate-180" : ""}`} /></Button>
-            {advancedOpen && <div className="mt-4 flex flex-wrap gap-x-12 gap-y-6 border-t border-border pt-5">
-              <fieldset><legend className="mb-3 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Summary length</legend><div className="flex gap-1">{(["short", "medium", "long"] as const).map((option) => <Button key={option} type="button" variant={length === option ? "secondary" : "ghost"} onClick={() => setLength(option)} className="h-8 rounded-sm px-3 text-xs capitalize shadow-none">{option}</Button>)}</div></fieldset>
-              <fieldset><legend className="mb-3 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Summarizer</legend><div className="flex gap-1">{(["auto", "bart", "pegasus"] as const).map((option) => <Button key={option} type="button" variant={summarizer === option ? "secondary" : "ghost"} onClick={() => setSummarizer(option)} className="h-8 rounded-sm px-3 text-xs capitalize shadow-none">{option}</Button>)}</div></fieldset>
+            {advancedOpen && <div className="mt-3 flex flex-wrap gap-x-12 gap-y-6 border-t border-border pt-5">
+              <fieldset><legend className="mb-3 text-[11px] font-bold uppercase text-muted-foreground">Summary length</legend><div className="flex gap-1">{(["short", "medium", "long"] as const).map((option) => <Button key={option} type="button" variant={length === option ? "secondary" : "ghost"} onClick={() => setLength(option)} className="h-8 rounded-sm px-3 text-xs capitalize shadow-none">{option}</Button>)}</div></fieldset>
+              <fieldset><legend className="mb-3 text-[11px] font-bold uppercase text-muted-foreground">Summarizer</legend><div className="flex gap-1">{(["auto", "bart", "pegasus"] as const).map((option) => <Button key={option} type="button" variant={summarizer === option ? "secondary" : "ghost"} onClick={() => setSummarizer(option)} className="h-8 rounded-sm px-3 text-xs capitalize shadow-none">{option}</Button>)}</div></fieldset>
             </div>}
           </div>
-          <div className="mt-16 max-w-[790px] border-t border-border pt-6 md:mt-20">
-            {!ready || !apiUrl ? <div className="flex flex-wrap items-center justify-between gap-3"><p className="font-serif text-xl text-muted-foreground">Paste your API URL to get started.</p><Button onClick={() => setSettingsOpen(true)} variant="link" className="px-0 text-primary">Connect your API <ArrowUpRight /></Button></div> : <>
-              <div className="mb-4 flex items-center justify-between"><p className="text-[11px] font-bold uppercase tracking-[0.17em] text-muted-foreground">Trending now</p>{trendingState === "error" && <Button variant="link" onClick={() => setTrendingRefresh((n) => n + 1)} className="h-auto p-0 text-xs text-primary">Try again</Button>}</div>
-              {trendingState === "loading" ? <p className="font-serif text-lg text-muted-foreground">Looking for the latest stories…</p> : trendingState === "error" ? <p className="text-sm text-muted-foreground">Trending topics aren’t available right now. You can still search above.</p> : trends.length ? <div className="flex flex-wrap gap-2">{trends.map((trend, index) => <Button key={`${trend.topic}-${index}`} type="button" variant="outline" title={trend.sample_headline || trend.topic} onClick={() => void research(trend.topic)} className="h-auto min-h-9 max-w-full whitespace-normal rounded-full border-border bg-transparent px-4 py-2 text-left text-xs font-normal leading-snug shadow-none hover:border-primary hover:bg-accent hover:text-accent-foreground">{trend.topic} <ArrowUpRight className="ml-1 !size-3 text-primary" /></Button>)}</div> : <p className="text-sm text-muted-foreground">No trending topics yet. Try searching for a story above.</p>}
+          <div className="mx-auto mt-10 w-full max-w-[690px] border-t border-border pt-6 md:mt-12">
+            {!ready || !apiUrl ? <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center"><span className="size-1.5 rounded-full bg-primary" /><p className="text-xs text-muted-foreground">Paste your API URL to get started.</p><Button onClick={() => setSettingsOpen(true)} variant="link" className="h-auto px-0 text-xs text-primary">Connect your API <ArrowUpRight className="!size-3" /></Button></div> : <>
+              <div className="mb-4 flex items-center justify-between"><p className="text-[11px] font-bold uppercase text-muted-foreground">Trending now</p>{trendingState === "error" && <Button variant="link" onClick={() => setTrendingRefresh((n) => n + 1)} className="h-auto p-0 text-xs text-primary">Try again</Button>}</div>
+              {trendingState === "loading" ? <p className="font-serif text-base text-muted-foreground">Looking for the latest stories…</p> : trendingState === "error" ? <p className="text-sm text-muted-foreground">Trending topics aren’t available right now. You can still search above.</p> : trends.length ? <div className="flex flex-wrap gap-2">{trends.map((trend, index) => <Button key={`${trend.topic}-${index}`} type="button" variant="outline" title={trend.sample_headline || trend.topic} onClick={() => void research(trend.topic)} className="h-auto min-h-9 max-w-full whitespace-normal rounded-sm border-border bg-transparent px-3 py-2 text-left text-xs font-normal leading-snug shadow-none hover:border-primary hover:bg-accent hover:text-accent-foreground">{trend.topic} <ArrowUpRight className="ml-1 !size-3 text-primary" /></Button>)}</div> : <p className="text-sm text-muted-foreground">No trending topics yet. Try searching for a story above.</p>}
             </>}
           </div>
         </div>}
 
         {phase === "loading" && <section aria-live="polite" className="arrive mx-auto max-w-4xl px-6 pb-28 pt-20 md:px-10 md:pt-32">
           <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Researching / {searchedTopic}</p>
-          <h1 className="max-w-2xl font-serif text-5xl leading-[1.08] md:text-7xl">A fuller picture takes a moment.</h1>
+          <h1 className="max-w-2xl font-serif text-3xl leading-[1.3] md:text-5xl">A fuller picture takes a moment.</h1>
           <div className="mt-14 max-w-xl border-t border-border">
             {stages.map((line, index) => <div key={line} className={`flex min-h-14 items-center gap-4 border-b border-border py-3 text-sm transition-colors duration-700 ${index === stage ? "text-foreground" : index < stage ? "text-muted-foreground" : "text-muted-foreground/40"}`}><span className={`flex size-6 shrink-0 items-center justify-center rounded-full border text-[10px] ${index === stage ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>{index < stage ? <Check className="!size-3" /> : String(index + 1).padStart(2, "0")}</span><span>{line}</span>{index === stage && <span className="ml-auto size-1.5 animate-pulse rounded-full bg-primary" />}</div>)}
           </div><p className="mt-8 text-xs text-muted-foreground">This can take up to a minute while sources are read and compared.</p>
           <Button variant="ghost" onClick={goHome} className="mt-10 -ml-4 text-sm text-muted-foreground"><X className="!size-4" /> Cancel research</Button>
         </section>}
 
-        {(phase === "empty" || phase === "error") && <section className="arrive mx-auto max-w-4xl px-6 pb-28 pt-24 md:px-10 md:pt-36"><p className="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">{phase === "empty" ? "Not enough coverage" : "Connection interrupted"}</p><h1 className="max-w-xl font-serif text-5xl leading-tight md:text-6xl">{phase === "empty" ? "Not quite enough to go on." : "We couldn’t finish that research."}</h1><p className="mt-6 max-w-lg leading-7 text-muted-foreground">{phase === "empty" ? `We couldn't find enough articles about “${searchedTopic}” to put together a reliable overview. Try a broader topic or a different phrase.` : errorMessage}</p><div className="mt-9 flex flex-wrap gap-3"><Button onClick={() => { setPhase("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-sm shadow-none">Try another topic <ArrowRight /></Button>{phase === "error" && <Button variant="outline" onClick={() => void research(searchedTopic)} className="rounded-sm shadow-none">Try again</Button>}</div></section>}
+        {(phase === "empty" || phase === "error") && <section className="arrive mx-auto max-w-4xl px-6 pb-28 pt-24 md:px-10 md:pt-36"><p className="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">{phase === "empty" ? "Not enough coverage" : "Connection interrupted"}</p><h1 className="max-w-xl font-serif text-3xl leading-tight md:text-5xl">{phase === "empty" ? "Not quite enough to go on." : "We couldn’t finish that research."}</h1><p className="mt-6 max-w-lg leading-7 text-muted-foreground">{phase === "empty" ? `We couldn't find enough articles about “${searchedTopic}” to put together a reliable overview. Try a broader topic or a different phrase.` : errorMessage}</p><div className="mt-9 flex flex-wrap gap-3"><Button onClick={() => { setPhase("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-sm shadow-none">Try another topic <ArrowRight /></Button>{phase === "error" && <Button variant="outline" onClick={() => void research(searchedTopic)} className="rounded-sm shadow-none">Try again</Button>}</div></section>}
 
         {phase === "results" && results && <Results result={results} activeSource={activeSource} setActiveSource={setActiveSource} focusSource={focusSource} sourceRefs={sourceRefs} />}
       </main>
@@ -251,8 +253,8 @@ function Results({ result, activeSource, setActiveSource, focusSource, sourceRef
   const pieces = (result.paragraph || "").split(/(\[\d+\])/g);
   return <article className="arrive mx-auto max-w-4xl px-6 pb-32 pt-16 md:px-10 md:pt-24">
     <div className="mb-6 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.19em] text-primary"><span className="h-px w-7 bg-primary" /> The overview</div>
-    <h1 className="font-serif text-5xl leading-tight md:text-7xl">{result.topic}</h1>
-    <div className="mt-10 border-l-2 border-primary pl-5 md:mt-14 md:pl-8"><p className="font-serif text-[25px] leading-[1.45] md:text-[32px] md:leading-[1.45]">{pieces.map((piece, index) => {
+    <h1 className="font-serif text-3xl leading-tight md:text-5xl">{result.topic}</h1>
+    <div className="mt-10 border-l-2 border-primary pl-5 md:mt-14 md:pl-8"><p className="font-serif text-[19px] leading-[1.7] md:text-[24px] md:leading-[1.65]">{pieces.map((piece, index) => {
       const match = /^\[(\d+)\]$/.exec(piece);
       if (!match) return <span key={index}>{piece}</span>;
       const number = Number(match[1]);
@@ -261,13 +263,13 @@ function Results({ result, activeSource, setActiveSource, focusSource, sourceRef
     })}</p></div>
     <p className="mt-7 text-xs text-muted-foreground">Based on {articles.length} {articles.length === 1 ? "source" : "sources"}{result.summary_mode ? ` · ${result.summary_mode} summary` : ""}</p>
 
-    <section className="mt-20 md:mt-28" aria-labelledby="sources-heading"><SectionHeading number="01" title="Sources" detail={`${articles.length} articles`} id="sources-heading" />
-      {articles.length ? <div className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">{articles.map((article, index) => <section key={`${article.url}-${index}`} ref={(node) => { sourceRefs.current[index] = node; }} onMouseEnter={() => setActiveSource(index)} onMouseLeave={() => setActiveSource(null)} className={`min-h-44 scroll-mt-32 bg-background p-5 transition-colors duration-300 md:p-7 ${activeSource === index ? "!bg-accent" : ""}`}><div className="mb-5 flex items-center justify-between"><span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">{String(index + 1).padStart(2, "0")} <span className="mx-2 text-border">/</span> {article.source || "Unknown source"}</span>{article.published && <time className="text-[11px] text-muted-foreground">{formatDate(article.published)}</time>}</div><h3 className="font-serif text-[22px] leading-[1.2] md:text-2xl">{article.title}</h3>{safeLink(article.url) && <a href={article.url} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-4 hover:underline">Read original <ArrowUpRight className="size-3.5" /></a>}</section>)}</div> : <p className="text-sm text-muted-foreground">No source articles were included in this response.</p>}
+    <section className="mt-16 md:mt-20" aria-labelledby="sources-heading"><SectionHeading number="01" title="Sources" detail={`${articles.length} articles`} id="sources-heading" />
+      {articles.length ? <div className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">{articles.map((article, index) => <section key={`${article.url}-${index}`} ref={(node) => { sourceRefs.current[index] = node; }} onMouseEnter={() => setActiveSource(index)} onMouseLeave={() => setActiveSource(null)} className={`min-h-44 scroll-mt-32 bg-background p-5 transition-colors duration-300 md:p-7 ${activeSource === index ? "!bg-accent" : ""}`}><div className="mb-5 flex items-center justify-between"><span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">{String(index + 1).padStart(2, "0")} <span className="mx-2 text-border">/</span> {article.source || "Unknown source"}</span>{article.published && <time className="text-[11px] text-muted-foreground">{formatDate(article.published)}</time>}</div><h3 className="font-serif text-lg leading-[1.4] md:text-xl">{article.title}</h3>{safeLink(article.url) && <a href={article.url} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-4 hover:underline">Read original <ArrowUpRight className="size-3.5" /></a>}</section>)}</div> : <p className="text-sm text-muted-foreground">No source articles were included in this response.</p>}
     </section>
 
-    {!!result.key_terms?.length && <section className="mt-20 md:mt-28" aria-labelledby="terms-heading"><SectionHeading number="02" title="Key terms" id="terms-heading" /><div className="flex flex-wrap gap-2">{result.key_terms.map((term, index) => <span key={`${term.term}-${index}`} title={`${term.type} · mentioned by ${term.n_sources} ${term.n_sources === 1 ? "source" : "sources"}`} className="rounded-full border border-border px-3.5 py-2 text-xs text-foreground">{term.term}<span className="ml-2 text-muted-foreground">{term.n_sources}</span></span>)}</div></section>}
+    {!!result.key_terms?.length && <section className="mt-16 md:mt-20" aria-labelledby="terms-heading"><SectionHeading number="02" title="Key terms" id="terms-heading" /><div className="flex flex-wrap gap-2">{result.key_terms.map((term, index) => <span key={`${term.term}-${index}`} title={`${term.type} · mentioned by ${term.n_sources} ${term.n_sources === 1 ? "source" : "sources"}`} className="rounded-full border border-border px-3.5 py-2 text-xs text-foreground">{term.term}<span className="ml-2 text-muted-foreground">{term.n_sources}</span></span>)}</div></section>}
 
-    <div className="mt-20 space-y-20 md:mt-28 md:space-y-28">
+    <div className="mt-16 space-y-16 md:mt-20 md:space-y-20">
       <ComparisonSection number="03" title="Where sources agree" pairs={result.agreements || []} empty="No clear agreements identified in this coverage." />
       <ComparisonSection number="04" title="What adds context" pairs={result.complementary || []} empty="No additional context identified across sources." />
       <ComparisonSection number="05" title="Worth a closer look" pairs={result.potential_conflicts || []} empty="No notable differences identified in this coverage." distinguish />
@@ -277,7 +279,7 @@ function Results({ result, activeSource, setActiveSource, focusSource, sourceRef
 }
 
 function SectionHeading({ number, title, detail, id }: { number: string; title: string; detail?: string; id: string }) {
-  return <div className="mb-7 flex items-end justify-between gap-4 border-t border-foreground pt-5"><div><span className="text-[11px] font-semibold text-primary">{number} /</span><h2 id={id} className="mt-2 font-serif text-3xl md:text-4xl">{title}</h2></div>{detail && <span className="pb-1 text-xs text-muted-foreground">{detail}</span>}</div>;
+  return <div className="mb-7 flex items-end justify-between gap-4 border-t border-foreground pt-5"><div><span className="text-[11px] font-semibold text-primary">{number} /</span><h2 id={id} className="mt-2 font-serif text-2xl md:text-3xl">{title}</h2></div>{detail && <span className="pb-1 text-xs text-muted-foreground">{detail}</span>}</div>;
 }
 
 function ComparisonSection({ number, title, pairs, empty, distinguish = false }: { number: string; title: string; pairs: Pair[]; empty: string; distinguish?: boolean }) {
@@ -285,7 +287,7 @@ function ComparisonSection({ number, title, pairs, empty, distinguish = false }:
 }
 
 function Quote({ source, text }: { source: string | number; text: string }) {
-  return <blockquote><p className="font-serif text-lg leading-relaxed md:text-xl">“{text}”</p><footer className="mt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">{String(source)}</footer></blockquote>;
+  return <blockquote><p className="font-serif text-base leading-relaxed md:text-lg">“{text}”</p><footer className="mt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">{String(source)}</footer></blockquote>;
 }
 
 function formatDate(value: string) {
