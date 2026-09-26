@@ -89,7 +89,7 @@ function Pulse() {
     if (!apiUrl) { setTrends([]); setTrendingState("loaded"); return; }
     const controller = new AbortController();
     setTrendingState("loading");
-    fetch(endpoint(apiUrl, "trending", { min_sources: "1", max_topics: "10" }), { signal: controller.signal })
+    fetch(endpoint(apiUrl, "trending", { min_sources: "1", max_topics: "10" }), { signal: controller.signal, headers: { "ngrok-skip-browser-warning": "true" } })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Trending request failed (${response.status})`);
         return response.json();
@@ -137,7 +137,7 @@ function Pulse() {
     setPhase("loading");
     window.scrollTo({ top: 0, behavior: "smooth" });
     try {
-      const response = await fetch(endpoint(apiUrl, "research", { topic: clean, max_articles: "6", summary_length: length, summarizer, keep_unverified: "false" }), { signal: controller.signal });
+      const response = await fetch(endpoint(apiUrl, "research", { topic: clean, max_articles: "6", summary_length: length, summarizer, keep_unverified: "false" }), { signal: controller.signal, headers: { "ngrok-skip-browser-warning": "true" } });
       if (response.status === 404) { setPhase("empty"); return; }
       if (!response.ok) throw new Error(`The research service returned ${response.status}.`);
       const data = await response.json() as Research;
