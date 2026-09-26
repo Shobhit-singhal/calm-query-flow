@@ -12,3 +12,4 @@
 ## Pulse architecture
 - Call the user-configured FastAPI tunnel directly from the browser and keep its URL in localStorage, because the tunnel changes per session and should not become a server-side arbitrary-URL proxy.
 - Keep search, loading, and research results in the home route as one flow, because Pulse is a single-page research tool.
+- Store the selected appearance locally and apply the dark class on the document element, because portaled settings and all semantic tokens must share the same theme.

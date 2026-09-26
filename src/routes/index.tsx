@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, Search, Settings2, X } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, Moon, Search, Settings2, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -16,6 +16,7 @@ type SummaryLength = "short" | "medium" | "long";
 type Summarizer = "auto" | "bart" | "pegasus";
 
 const STORAGE_KEY = "pulse-api-url";
+const THEME_KEY = "pulse-theme";
 const stages = ["Finding coverage across sources…", "Reading the reporting…", "Summarizing the story…", "Cross-checking coverage…", "Putting the pieces together…"];
 
 export const Route = createFileRoute("/")({
@@ -47,6 +48,7 @@ function Pulse() {
   const [apiUrl, setApiUrl] = useState("");
   const [apiDraft, setApiDraft] = useState("");
   const [ready, setReady] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsError, setSettingsError] = useState("");
   const [query, setQuery] = useState("");
@@ -70,8 +72,18 @@ function Pulse() {
     const saved = window.localStorage.getItem(STORAGE_KEY) || "";
     setApiUrl(saved);
     setApiDraft(saved);
+    const dark = window.localStorage.getItem(THEME_KEY) === "dark";
+    setDarkMode(dark);
+    document.documentElement.classList.toggle("dark", dark);
     setReady(true);
   }, []);
+
+  function toggleTheme() {
+    const next = !darkMode;
+    setDarkMode(next);
+    document.documentElement.classList.toggle("dark", next);
+    window.localStorage.setItem(THEME_KEY, next ? "dark" : "light");
+  }
 
   useEffect(() => {
     if (!apiUrl) { setTrends([]); setTrendingState("loaded"); return; }
@@ -161,6 +173,7 @@ function Pulse() {
         <Button variant="ghost" onClick={goHome} className="h-auto p-0 font-serif text-[31px] font-semibold leading-none hover:bg-transparent hover:text-primary" aria-label="Pulse home">pulse<span className="text-primary">.</span></Button>
         <div className="flex items-center gap-3 sm:gap-5">
           {ready && apiUrl && <span className="hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:flex"><span className="h-1.5 w-1.5 rounded-full bg-primary" /> Connected</span>}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"} title={darkMode ? "Switch to light mode" : "Switch to dark mode"} className="text-muted-foreground hover:text-foreground">{darkMode ? <Sun className="!size-[19px]" strokeWidth={1.6} /> : <Moon className="!size-[19px]" strokeWidth={1.6} />}</Button>
           <Popover open={settingsOpen} onOpenChange={(open) => { setSettingsOpen(open); if (open) { setApiDraft(apiUrl); setSettingsError(""); } }}>
             <PopoverTrigger asChild><Button variant="ghost" size="icon" aria-label="API settings" title="API settings" className="text-muted-foreground hover:text-foreground"><Settings2 className="!size-[19px]" strokeWidth={1.6} /></Button></PopoverTrigger>
             <PopoverContent align="end" sideOffset={12} className="w-[min(350px,calc(100vw-32px))] rounded-md border-border p-5 shadow-none">
